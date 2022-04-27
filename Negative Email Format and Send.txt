@@ -1,0 +1,69 @@
+Sub Button2_Click()
+
+Dim ws As Worksheet
+Dim wb As Workbook
+Dim rng As Integer
+Set wb = ThisWorkbook
+
+For Each ws In wb.Worksheets
+Dim name As String
+name = ws.name
+rng = Sheets(name).UsedRange.Rows.count
+    Sheets(name).Select
+    Sheets(name).Cells.Select
+    Selection.AutoFilter
+    ActiveWorkbook.Worksheets(name).AutoFilter.Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets(name).AutoFilter.Sort.SortFields.Add2 Key:=Range( _
+        "A1:A" & rng), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+        xlSortNormal
+    With ActiveWorkbook.Worksheets(name).AutoFilter.Sort
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+Next ws
+
+Dim OutApp As Object
+Dim OutMail As Object
+Dim str1 As String
+Dim str2 As String
+
+Dim dtToday As Date
+dtToday = Date
+
+Const fname = "C:\Users\aamirpanah\Desktop\negative.xlsm"
+
+Set wb = ActiveWorkbook
+wb.SaveAs fname
+
+str1 = "ivy@frontierimaging.com"
+str2 = "juan@frontierimaging.com"
+str3 = "chris@frontierimaging.com"
+str4 = "aaron@frontierimaging.com"
+str5 = "david@frontierimaging.com"
+str6 = "joann@frontierimaging.com"
+str7 = "johnson@frontierimaging.com"
+str8 = "nigel@frontierimaging.com"
+
+Set OutApp = CreateObject("Outlook.Application")
+OutApp.Session.Logon
+Set OutMail = OutApp.CreateItem(0)
+
+On Error Resume Next
+With OutMail
+.To = str1 & ";" & str2 & ";" & str3 & ";" & str8
+.CC = str5 & ";" & str6 & ";" & str7 & ";" & str4
+.Subject = dtToday & " Negative Report"
+.HTMLbody = "Hi Everyone, <br><br>Please see attached negative report for today, " & dtToday & "<br><br> Thanks, <br> Aaron Amirpanah<br>"
+.Attachments.Add ActiveWorkbook.FullName
+.Send
+End With
+On Error GoTo 0
+MsgBox "Email Sent."
+Set OutMail = Nothing
+Set OutApp = Nothing
+
+
+End Sub

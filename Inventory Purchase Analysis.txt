@@ -1,0 +1,314 @@
+Sub Button3_Click()
+Sheets.Add.name = "Check"
+Dim ws As Worksheet
+Dim wb As Workbook
+Set wb = ThisWorkbook
+For Each ws In wb.Worksheets
+
+Application.ScreenUpdating = True
+
+Dim reet As Long
+Dim item As String
+Dim wsName As String
+Dim freq As Long
+Dim ranger As Long
+Dim rangew As Long
+Dim sumqty As Long
+Dim avgShip As Long
+Dim txnMonth As Long
+Dim product As String
+Dim yman As Long
+
+
+
+
+wsName = ws.name
+If wsName = "Ledge" Then
+wsName = "RISO"
+End If
+
+Sheets("Ledge").Select
+ranger = Sheets("Ledge").UsedRange.Rows.count
+
+Sheets(wsName).Select
+rangew = Sheets(wsName).UsedRange.Rows.count
+For reet = 2 To rangew
+item = Sheets(wsName).Cells(reet, 5)
+yman = 0
+
+
+ Sheets("Ledge").Select
+ Sheets("Ledge").Columns("A:A").Select
+For i = 2 To ranger
+If item = Sheets("Ledge").Cells(i, 1) Then
+product = Sheets("Ledge").Cells(i, 8)
+i = ranger
+yman = 1
+End If
+Next i
+   
+    Selection.AutoFilter
+    Sheets("Ledge").Range("$A$1:$A$" & ranger).AutoFilter Field:=1, Criteria1:= _
+    item
+    Dim myTable As Range
+    Set myTable = Sheets("Ledge").AutoFilter.Range
+    
+    
+    sumqty = Abs(Application.WorksheetFunction.sum(Sheets("Ledge").Columns(7).SpecialCells(xlCellTypeVisible)))
+    
+   If yman = 1 Then
+    'copy myTable to new sheet
+    Sheets("Check").Cells.Clear
+    Sheets("Ledge").Cells.Select
+    Selection.SpecialCells(xlCellTypeVisible).Copy
+    Sheets("Check").Select
+    Sheets("Check").Cells.Select
+    ActiveSheet.PasteSpecial
+    
+    'TOP LOCATION
+    Dim ct As Long
+    Dim FL As Long
+    Dim CA As Long
+    Dim qwe As Long
+    Dim win As Long
+    Dim loc As String
+    Application.ScreenUpdating = True
+    DoEvents
+    Sheets("Check").Select
+    If Sheets("Check").Cells(2, 1) = "Item No." Then
+    Sheets("Check").Cells.Clear
+    End If
+    FL = 0
+    CA = 0
+    ct = Sheets("Check").UsedRange.Rows.count
+    
+    For qwe = 2 To ct
+    If Sheets("Check").Cells(qwe, 6) = "COMPTON" Then
+    CA = CA + Sheets("Check").Cells(qwe, 7)
+    ElseIf Sheets("Check").Cells(qwe, 6) = "FLORIDA" Then
+    FL = FL + Sheets("Check").Cells(qwe, 7)
+    Else
+    'MsgBox ("NO LOCATION")
+    End If
+    Next qwe
+    CA = Abs(CA)
+    FL = Abs(FL)
+    
+    If CA > FL Then
+    win = CA
+    loc = "COMPTON"
+    ElseIf FL > CA Then
+    win = FL
+    loc = "FLORIDA"
+    End If
+    Else
+    win = 0
+    loc = "smd"
+    End If
+    'DONE use win for top location sold value and loc for location
+    
+    
+    'TOP MONTH
+    Sheets("Check").Select
+    Dim cte As Long
+    Dim qwer As Long
+    Dim arr(0 To 13) As Long
+    Dim max As Long
+    Dim mon As Long
+    
+    arr(1) = 0
+    arr(2) = 0
+    arr(3) = 0
+    arr(4) = 0
+    arr(5) = 0
+    arr(6) = 0
+    arr(7) = 0
+    arr(8) = 0
+    arr(9) = 0
+    arr(10) = 0
+    arr(11) = 0
+    arr(12) = 0
+    
+    cte = Sheets("Check").UsedRange.Rows.count
+    For qwer = 2 To cte
+    Dim index As Long
+    index = Month(Sheets("Check").Cells(qwer, 2))
+    arr(index) = arr(index) + Sheets("Check").Cells(qwer, 7)
+    Next qwer
+   
+    max = 0
+    mon = 0
+    For qwer = 1 To 12
+    If Abs(arr(qwer)) > max Then
+    max = Abs(arr(qwer))
+    mo = qwer
+    End If
+    Next qwer
+    'DONE MAX gvies the amount sold in a month and MO is the month #
+    
+    'TOP CUSTOMER
+    'Dim countt As Long
+    ' im ctee As Long
+    'Dim qwert As Long
+    'Dim qwerty As Long
+    'Dim coll As Object
+    'Dim custCode As String
+    'Dim numOrder As Long
+    'Dim chek As Object
+    'Set chek = CreateObject("System.Collections.ArrayList")
+    'Set coll = CreateObject("System.Collections.ArrayList")
+    'cte = Sheets("Check").UsedRange.Rows.count
+    'For qwert = 2 To cte
+    'If coll.Contains(Sheets("Check").Cells(qwert, 3)) = False Then
+    'coll.Add (Sheets("Check").Cells(qwert, 3))
+    'chek.Add (0)
+    'End If
+    'Next qwert
+    
+   
+    'For qwerty = 0 To coll.count - 1
+    'Dim namer As String
+    'namer = coll(qwerty)
+    'For countt = 2 To cte
+    'If Sheets("Check").Cells(countt, 3) = namer Then
+    'chek(qwerty) = chek(qwerty) + Sheets("Check").Cells(countt, 7)
+    'End If
+   ' Next countt
+   ' Next qwerty
+    
+   ' Dim nCount As Long
+   ' Dim comp As Long
+   ' comp = 0
+   ' For nCount = 0 To chek.count - 1
+   ' If Abs(chek(nCount)) > comp Then
+   ' comp = Abs(chek(nCount))
+   ' End If
+   ' Next nCount
+   ' custCode = coll(chek.IndexOf(-1 * (comp), 0))
+   ' numOrder = comp
+    
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    Dim customerNames As Object
+    Dim amountPurchased As Object
+    
+    Dim doesContain As Boolean
+    
+    Dim checkIndex As Long
+    Dim checkLength As Long
+    
+    Dim ArrayListIndex As Long
+    
+    Dim maxVal As Long
+    
+    Dim checkName As String
+    Dim finalName As String
+    
+    Set customerNames = CreateObject("System.Collections.ArrayList")
+    Set amountPurchased = CreateObject("System.Collections.ArrayList")
+    
+    checkLength = Sheets("Check").UsedRange.Rows.count
+    
+    For checkIndex = 2 To checkLength
+        
+        checkName = Sheets("Check").Cells(checkIndex, 3)
+        doesContain = customerNames.Contains(checkName)
+        
+        If doesContain = False Then
+            customerNames.Add (checkName)
+            amountPurchased.Add (0)
+        End If
+    Next checkIndex
+    
+    For ArrayListIndex = 0 To customerNames.count - 1
+    checkName = customerNames.item(ArrayListIndex)
+            For checkIndex = 2 To checkLength
+        
+                If Sheets("Check").Cells(checkIndex, 3) = checkName Then
+                    amountPurchased.item(ArrayListIndex) = amountPurchased.item(ArrayListIndex) + Sheets("Check").Cells(checkIndex, 7)
+                End If
+                
+            Next checkIndex
+    Next ArrayListIndex
+    
+    maxVal = 0
+    For ArrayListIndex = 0 To customerNames.count - 1
+    Dim aVal As Long
+    Dim bVal As Long
+    
+    aVal = amountPurchased.item(ArrayListIndex)
+    aVal = Abs(aVal)
+    If aVal > maxVal Then
+    maxVal = aVal
+    bVal = ArrayListIndex
+    End If
+    
+    Next ArrayListIndex
+    
+    finalName = customerNames.item(bVal)
+    
+  
+    freq = (myTable.Resize(, 1).SpecialCells(xlCellTypeVisible).count) - 1
+    
+    If freq = 0 Then
+    freq = 1
+    End If
+    avgShip = sumqty / freq
+    txnMonth = CLng(freq / 12#)
+    
+    
+
+    Sheets("Ledge").Select
+    Sheets("Ledge").Range("$A$1:$A$" & ranger).AutoFilter Field:=1
+    Sheets(wsName).Select
+    Sheets(wsName).Cells(1, 32) = "Avg qty per month"
+    Sheets(wsName).Cells(1, 33) = "Avg qty per trans"
+    Sheets(wsName).Cells(1, 34) = "Avg Qty Trans per Month"
+    Sheets(wsName).Cells(1, 35) = "Product Code"
+    Sheets(wsName).Cells(1, 36) = "Top Location"
+    Sheets(wsName).Cells(1, 37) = "Amount Purchased"
+    Sheets(wsName).Cells(1, 38) = "Top Month"
+    Sheets(wsName).Cells(1, 39) = "Amount Purchased"
+    Sheets(wsName).Cells(1, 40) = "Top Vendor"
+    Sheets(wsName).Cells(1, 41) = "Amount Purchased"
+   
+    sumqty = CLng(sumqty / 12#)
+    If sumqty > Sheets(wsName).Cells(reet, 1) Then
+    'Sheets(wsName).Cells(reet, 1).Interior.ColorIndex = 3
+    Sheets(wsName).Cells(reet, 32) = sumqty
+    Sheets(wsName).Cells(reet, 33) = avgShip
+    Sheets(wsName).Cells(reet, 34) = txnMonth
+    Sheets(wsName).Cells(reet, 35) = product
+    Sheets(wsName).Cells(reet, 36) = loc
+    Sheets(wsName).Cells(reet, 37) = win
+    Sheets(wsName).Cells(reet, 38) = mo
+    Sheets(wsName).Cells(reet, 39) = max
+    Sheets(wsName).Cells(reet, 40) = finalName
+    Sheets(wsName).Cells(reet, 41) = maxVal
+   
+    Else
+    'Sheets(wsName).Cells(reet, 1).Interior.ColorIndex = 4
+    Sheets(wsName).Cells(reet, 32) = sumqty
+    Sheets(wsName).Cells(reet, 33) = avgShip
+    Sheets(wsName).Cells(reet, 34) = txnMonth
+    Sheets(wsName).Cells(reet, 35) = product
+    Sheets(wsName).Cells(reet, 36) = loc
+    Sheets(wsName).Cells(reet, 37) = win
+    Sheets(wsName).Cells(reet, 38) = mo
+    Sheets(wsName).Cells(reet, 39) = max
+    Sheets(wsName).Cells(reet, 40) = finalName
+    Sheets(wsName).Cells(reet, 41) = maxVal
+    
+End If
+ Next reet
+
+Sheets(wsName).Columns("R:W").Cut
+Sheets(wsName).Range("L1").Insert
+If wsName = "MITA" Then
+End
+End If
+
+Next ws
+
+
+End Sub
+

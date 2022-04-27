@@ -1,0 +1,33 @@
+Sub Button3_Click()
+
+Dim ws As Worksheet
+Dim wb As Workbook
+Set wb = ThisWorkbook
+For Each ws In wb.Worksheets
+Dim name As String
+name = ws.name
+If name <> "KONMIN" Then
+Sheets(name).Columns("B:D").Hidden = True
+Sheets(name).Columns("F").Hidden = True
+Sheets(name).Columns("H:I").Hidden = True
+Sheets(name).Columns("L:U").Hidden = True
+Sheets(name).Columns("AF:AH").Hidden = True
+'Sheets(name).Columns("AI").Delete Shift:=xlShiftLeft
+
+Sheets(name).Columns("W").Cut
+Sheets(name).Columns("G").Insert Shift:=xlToRight
+
+Sheets(name).Columns("AD:AE").Cut
+Sheets(name).Columns("X").Insert Shift:=xlToRight
+
+Sheets(name).Columns("AJ:AK").Cut
+Sheets(name).Columns("AB").Insert Shift:=xlToRight
+
+Sheets(name).Columns("AL:AM").Cut
+Sheets(name).Columns("AF").Insert Shift:=xlToRight
+
+Sheets(name).Columns("AM").Delete Shift:=xlToLeft
+End If
+Next ws
+
+End Sub

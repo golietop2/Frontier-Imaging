@@ -1,0 +1,50 @@
+Sub Letters_Out()
+DoEvents
+Application.ScreenUpdating = True
+For a = 1 To Sheets("Sheet1").UsedRange.Rows.Count
+Dim s As String
+s = Cells(a, 1)
+If s <> "" Then
+Dim searchNumbers As Object
+
+Set searchNumbers = CreateObject("System.Collections.ArrayList")
+Dim number As String
+For Counter = 1 To Len(s)
+    If Mid(s, Counter, 1) = " " Or Counter = Len(s) Then
+     'add number to arraylist, new number, next add
+     searchNumbers.Add (number)
+     number = ""
+     Else
+     number = number + Mid(s, Counter, 1)
+     End If
+Next Counter
+If searchNumbers.Count = 0 Then
+searchNumbers.Add (number)
+End If
+
+Dim result As String
+result = ""
+For w = 0 To searchNumbers.Count - 1
+Dim searchNum As String
+
+searchNum = searchNumbers(w)
+For q = 2 To Sheets("Sheet3").UsedRange.Rows.Count
+Dim y As String
+y = Sheets("Sheet3").Cells(q, 2)
+If InStr(y, searchNum) <> 0 Then
+result = result & " " & Sheets("Sheet3").Cells(q, 1)
+End If
+Next q
+Next w
+Sheets("Sheet1").Cells(a, 2) = result
+'create array list
+'iterate through s and add values into array list every space until the end
+'check each arraylist value instr the search col, when found, keep going until the end adding hits into result
+'put result into proper cell index
+
+End If
+Next a
+
+
+
+End Sub

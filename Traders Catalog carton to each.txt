@@ -1,0 +1,22 @@
+Public Sub lolol()
+Dim price As Double
+For i = 1914 To Sheets("Sheet1").UsedRange.Rows.Count
+If CStr(Cells(i, 5)) <> "" Then
+price = CDbl(Cells(i, 5))
+Dim checkString As String
+For k = i To i + 4
+checkString = CStr(Cells(k, 3))
+If InStr(checkString, "ctns") <> 0 Or InStr(checkString, "ctgs") <> 0 Then
+Dim master As Double
+master = CDbl(Mid(checkString, 1, 2))
+Dim eachPrice As Double
+eachPrice = price / master
+Cells(i, 4) = eachPrice
+k = i + 4
+End If
+Next k
+End If
+Next i
+End Sub
+
+**DELETE PRICING PER CARTON DOGSHIT LMAMO, under development, see aficio 1060
